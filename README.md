@@ -1,6 +1,6 @@
 # 迷你天猫商城
 + **问题交流群：763819871**原作者交流群欢迎加入
-+ **前台演示地址（服务器2核2G内存，请温和测试 ^ ^）：<http://fangpengbo:8080/tmall/>**
++ **前台演示地址（服务器2核2G内存，请温和测试 ^ ^）：<http://www.fangpengbo:8080/tmall/>**
 
 ### 该项目属于搬运
 该项目原地址:https://gitee.com/project_team/Tmall_demo ,现已更换为springboot微服务,原项目还有后台管理系统<br>
@@ -23,7 +23,7 @@
 2. 项目数据库为MySQL 5.7版本，请在附件上下载SQL文件并导入到数据库中。
 3. 使用IDEA打开项目后，在maven面板刷新项目，下载依赖包。
 4. 在IDEA中配置tomcat服务器，请确认idea中服务配置的地址如下图，配置完毕后即可启动服务
-![IDEA项目配置](https://images.gitee.com/uploads/images/2019/0711/130625_a491485f_1616166.png "TIM图片20190711130526.png")
+
 
 ### Tomcat直接部署方式
 + 链接: <https://pan.baidu.com/s/12Ef4bKLo9BkAbV9fPu0zFw> 提取码: szfv
@@ -40,6 +40,8 @@
 ### 注意事项：
 1. 该项目同时兼容eclipse，但如有自行扩展代码的意愿，建议使用IDEA。
 2. 该项目是我们几个学生在校合作完成的一个练习项目，目的是让编程初学者和应届毕业生可以参考一下用较少的代码实现一个完整MVC模式，SSM框架体系的电商项目，相关领域大神们可以给我们建议，让我们做得更好。
+3.原项目更换密码加密之后第一次运行项目请执行以下com.fang.test.MD5类中把原数据库明文密码换成加密后密码 否则无法登陆
+![MD5加密](https://raw.githubusercontent.com/FangPengbo/tmall/master/About/AboutImage/MD5%E5%8A%A0%E5%AF%86.png)
 
 ### 项目界面
 + ##### 前台界面(部分)---
