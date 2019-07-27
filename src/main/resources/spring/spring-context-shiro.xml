@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!--1.配置securityManager-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="MyRealm"/>
+    </bean>
+
+    <!--3.配置Realm-->
+    <bean id="MyRealm" class="com.fang.realm.LoginRealm">
+        <!--使用凭证匹配器的md5算法加密-->
+        <property name="credentialsMatcher">
+            <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                <!--使用md5加密-->
+                <property name="hashAlgorithmName" value="MD5"></property>
+                <!--迭代1024次-->
+                <property name="hashIterations" value="1024"></property>
+            </bean>
+        </property>
+    </bean>
+    <!--
+        4.配置lifecycleBeanPostProcessor
+          可以自动的来调用配置在Spring IOC 容器中Shiro bean 的生命周期方法
+    -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    <!--5.启用IOC容器中使用Shiro的注解,但必须在配置了lifecycleBeanPostProcessor 之后才可以使用-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!--
+        6.配置shiroFilter
+          id必须和web.xml中filter一致
+    -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="unauthorizedUrl" value="/error.jsp"/><!--没有权限的页面-->
+        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property><!---->
+    </bean>
+
+    <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBullder"
+          factory-method="builderfilterChainDefinitionMap"> </bean>
+    <!--配置一个bean,该bean其实是一个map,通过实例工厂方法的方式-->
+    <bean id="filterChainDefinitionMapBullder"  class="com.fang.factory.FilterChainDefinitionMapBullder"></bean>
+
+</beans>

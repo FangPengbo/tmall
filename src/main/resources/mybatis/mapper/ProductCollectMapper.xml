@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+<mapper namespace="com.fang.dao.ProductCollectMapper">
+    <resultMap id="productCollectMap" type="com.fang.entity.ProductCollect">
+        <id property="productCollect_id" column="productcollect_id"/>
+        <association property="productCollect_product" javaType="com.fang.entity.Product">
+            <id property="product_id" column="productcollect_product_id"/>
+        </association>
+        <association property="productCollect_user" javaType="com.fang.entity.User">
+            <id property="user_id" column="productcollect_user_id"/>
+        </association>
+    </resultMap>
+
+    <select id="selectTotal" resultType="int" parameterType="productcollect">
+        SELECT COUNT(productcollect_id) FROM productcollect
+        <if test="productcollect != null">
+            <where>
+                <if test="productcollect.productCollect_product !=null">
+                    <if test="productcollect.productCollect_product.product_id !=null">
+                        productcollect_product_id=#{productcollect.productCollect_product.product_id}
+                    </if>
+                </if>
+                <if test="productcollect.productCollect_user !=null">
+                    <if test="productcollect.productCollect_user.user_id !=null">
+                       and productcollect_user_id=#{productcollect.productCollect_user.user_id}
+                    </if>
+                </if>
+            </where>
+        </if>
+
+
+    </select>
+
+    <insert id="insertOne" parameterType="productcollect">
+        INSERT productcollect(productcollect_id,productcollect_product_id,productcollect_user_id)
+        VALUES(
+            null,
+            #{productcollect.productCollect_product.product_id},
+            #{productcollect.productCollect_user.user_id})
+    </insert>
+
+    <delete id="deleteOne" parameterType="productcollect">
+        DELETE FROM productcollect
+        <where>
+             <if test="productcollect.productCollect_id !=null">
+                 and productcollect_id=#{productcollect.productCollect_id}
+             </if>
+            <if test="productcollect.productCollect_product !=null">
+                <if test="productcollect.productCollect_product.product_id !=null">
+                    and productcollect_product_id=#{productcollect.productCollect_product.product_id}
+                </if>
+            </if>
+            <if test="productcollect.productCollect_user !=null">
+                <if test="productcollect.productCollect_user.user_id !=null">
+                    and productcollect_user_id=#{productcollect.productCollect_user.user_id}
+                </if>
+            </if>
+        </where>
+    </delete>
+    <select id="selectList" resultMap="productCollectMap">
+        SELECT productcollect_id,productcollect_product_id,productcollect_user_id FROM productcollect
+        <where>
+            productcollect_user_id=#{user_id}
+            ORDER BY productcollect_id desc
+        </where>
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.index},#{pageUtil.count}
+        </if>
+
+    </select>
+    <select id="selectOne" resultMap="productCollectMap">
+        SELECT productcollect_id,productcollect_product_id,productcollect_user_id FROM productcollect
+        <where>
+            productcollect_id=#{productcollect_id}
+        </where>
+    </select>
+</mapper>

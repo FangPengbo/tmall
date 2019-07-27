@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+<mapper namespace="com.fang.dao.ProductOrderMapper">
+    <resultMap id="productOrderMap" type="productOrder">
+        <id property="productOrder_id" column="productOrder_id"/>
+        <result property="productOrder_code" column="productOrder_code"/>
+        <result property="productOrder_detail_address" column="productOrder_detail_address"/>
+        <result property="productOrder_post" column="productOrder_post"/>
+        <result property="productOrder_receiver" column="productOrder_receiver"/>
+        <result property="productOrder_mobile" column="productOrder_mobile"/>
+        <result property="productOrder_pay_date" column="productOrder_pay_date"/>
+        <result property="productOrder_delivery_date" column="productOrder_delivery_date"/>
+        <result property="productOrder_confirm_date" column="productOrder_confirm_date"/>
+        <result property="productOrder_status" column="productOrder_status"/>
+        <association property="productOrder_address" javaType="com.fang.entity.Address">
+            <id property="address_areaId" column="productOrder_address"/>
+        </association>
+        <association property="productOrder_user" javaType="com.fang.entity.User">
+            <id property="user_id" column="productOrder_user_id"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="productOrder">
+        INSERT productOrder
+        (productOrder_id,productOrder_code,productOrder_detail_address,productOrder_post,productOrder_receiver,productOrder_mobile,productOrder_pay_date,productOrder_delivery_date,productOrder_confirm_date,productOrder_status,productOrder_address,productOrder_user_id)
+            VALUES (
+            null,
+            #{productOrder.productOrder_code},
+            #{productOrder.productOrder_detail_address},
+            #{productOrder.productOrder_post},
+            #{productOrder.productOrder_receiver},
+            #{productOrder.productOrder_mobile},
+            #{productOrder.productOrder_pay_date},
+            #{productOrder.productOrder_delivery_date},
+            #{productOrder.productOrder_confirm_date},
+            #{productOrder.productOrder_status},
+        #{productOrder.productOrder_address.address_areaId},
+        #{productOrder.productOrder_user.user_id})
+    </insert>
+    <update id="updateOne" parameterType="productOrder">
+        UPDATE productOrder
+        <set>
+            <if test="productOrder.productOrder_address != null">
+                productOrder_address = #{productOrder.productOrder_address},
+            </if>
+            <if test="productOrder.productOrder_detail_address != null">
+                productOrder_detail_address = #{productOrder.productOrder_detail_address},
+            </if>
+            <if test="productOrder.productOrder_post != null">
+                productOrder_post = #{productOrder.productOrder_post},
+            </if>
+            <if test="productOrder.productOrder_status != null">
+                productOrder_status = #{productOrder.productOrder_status},
+            </if>
+            <if test="productOrder.productOrder_pay_date != null">
+                productOrder_pay_date = #{productOrder.productOrder_pay_date},
+            </if>
+            <if test="productOrder.productOrder_delivery_date != null">
+                productOrder_delivery_date = #{productOrder.productOrder_delivery_date},
+            </if>
+            <if test="productOrder.productOrder_confirm_date != null">
+                productOrder_confirm_date = #{productOrder.productOrder_confirm_date}
+            </if>
+        </set>
+        <where>
+            productOrder_id = #{productOrder.productOrder_id}
+        </where>
+    </update>
+    <delete id="deleteList" parameterType="java.util.ArrayList">
+        DELETE FROM productOrder
+        <where>
+            productOrder_id IN
+            <foreach collection="productOrder_id_list" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
+    <select id="select" resultMap="productOrderMap">
+        SELECT
+        productOrder_id,productOrder_code,productOrder_detail_address,productOrder_post,productOrder_receiver,productOrder_mobile,productOrder_pay_date,productOrder_delivery_date,productOrder_confirm_date,productOrder_status,productOrder_address,productOrder_user_id
+        FROM productOrder
+        <where>
+            <if test="productOrder != null">
+                <if test="productOrder.productOrder_code != null">productOrder_code LIKE
+                    concat('%',#{productOrder.productOrder_code},'%')
+                </if>
+                <if test="productOrder.productOrder_post != null">and productOrder_post LIKE
+                    concat('%',#{productOrder.productOrder_post},'%')
+                </if>
+                <if test="productOrder.productOrder_user != null">and productOrder_user_id =
+                    #{productOrder.productOrder_user.user_id}
+                </if>
+            </if>
+            <if test="productOrder_status_array != null">
+                and productOrder_status IN
+                <foreach collection="productOrder_status_array" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="orderUtil != null">
+            ORDER BY ${orderUtil.orderBy}
+            <if test="orderUtil.isDesc">desc</if>
+        </if>
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.pageStart},#{pageUtil.count}
+        </if>
+    </select>
+    <select id="selectOne" resultMap="productOrderMap" parameterType="int">
+        SELECT
+        productOrder_id,productOrder_code,productOrder_detail_address,productOrder_post,productOrder_receiver,productOrder_mobile,productOrder_pay_date,productOrder_delivery_date,productOrder_confirm_date,productOrder_status,productOrder_address,productOrder_user_id
+        FROM productOrder
+        <where>
+            productOrder_id = #{productOrder_id}
+        </where>
+    </select>
+    <select id="selectByCode" resultMap="productOrderMap" parameterType="string">
+        SELECT
+        productOrder_id,productOrder_code,productOrder_detail_address,productOrder_post,productOrder_receiver,productOrder_mobile,productOrder_pay_date,productOrder_delivery_date,productOrder_confirm_date,productOrder_status,productOrder_address,productOrder_user_id
+        FROM productOrder
+        <where>
+            productOrder_code = #{productOrder_code}
+        </where>
+    </select>
+    <select id="selectTotal" resultType="int">
+        SELECT COUNT(productOrder_id) FROM productOrder
+        <where>
+            <if test="productOrder != null">
+                <if test="productOrder.productOrder_code">productOrder_code LIKE concat('%',#{productOrder.productOrder_code},'%')</if>
+                <if test="productOrder.productOrder_post">and productOrder_post LIKE concat('%',#{productOrder.productOrder_post},'%')</if>
+                <if test="productOrder.productOrder_user != null">and productOrder_user_id =
+                    #{productOrder.productOrder_user.user_id}
+                </if>
+            </if>
+            <if test="productOrder_status_array != null">and productOrder_status IN
+                <foreach collection="productOrder_status_array" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getTotalByDate" resultType="orderGroup">
+        SELECT
+        productOrder_pay_date,count(productOrder_id) as productOrder_count ,productOrder_status from productOrder
+        <where>
+            productOrder_pay_date BETWEEN #{beginDate} AND #{endDate}
+        </where>
+        GROUP BY DATE_FORMAT(productOrder_pay_date,'%Y-%m-%d'),productOrder_status
+    </select>
+</mapper>

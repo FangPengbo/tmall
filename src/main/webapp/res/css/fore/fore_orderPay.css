@@ -1,0 +1,106 @@
+.header {
+    width: 1230px;
+    margin: 0 auto;
+    height: 96px;
+}
+
+.header > #mallLogo {
+    float: left;
+    padding-top: 28px;
+    width: 280px;
+    height: 64px;
+    line-height: 64px;
+    position: relative;
+}
+
+#mallLogo > a {
+    position: relative;
+    display: block;
+    width: 190px;
+    height: 30px;
+    overflow: hidden;
+}
+
+#mallLogo img {
+    width: 190px;
+    height: 28px;
+    cursor: pointer;
+    vertical-align: top;
+}
+
+.content {
+    width: 950px;
+    margin: 30px auto auto;
+    min-height: 400px;
+    padding-bottom: 60px;
+    color: #666;
+    position: relative;
+}
+
+.content > .order_div {
+    position: relative;
+}
+
+.content > .order_div > img {
+    position: absolute;
+    left: 0;
+    vertical-align: top;
+}
+
+.content > .order_div > .order_name, .content > .order_div > .order_shop_name {
+    width: 600px;
+    display: inline-block;
+    color: #333;
+    font-size: 12px;
+    margin-left: 116px;
+    line-height: 25px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.content > .order_div > .order_name {
+    margin-top: 25px;
+}
+
+.content > .order_div > .order_price {
+    position: absolute;
+    right: 27px;
+    top: 30px;
+    float: right;
+}
+
+.order_price > .price_value {
+    color: #ff8208;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.content > .order_pay_div {
+    overflow: hidden;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.order_pay_div .order_pay_btn {
+    display: inline-block;
+    width: 110px;
+    height: 32px;
+    color: #fff;
+    border: 1px solid #0ae;
+    background-color: #0ae;
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 2px;
+    padding: 0 20px;
+    margin: 0 auto;
+    line-height: 32px;
+}
+
+.order_pay_btn:hover {
+    background-color: #00A3D2;
+    transition: background-color 0.5s;
+    text-decoration: none;
+}

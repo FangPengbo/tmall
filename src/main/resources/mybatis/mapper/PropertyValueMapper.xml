@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+<mapper namespace="com.fang.dao.PropertyValueMapper">
+    <resultMap id="propertyValueMap" type="propertyValue">
+        <id property="propertyValue_id" column="propertyValue_id"/>
+        <result property="propertyValue_value" column="propertyValue_value"/>
+        <association property="propertyValue_property" javaType="com.fang.entity.Property">
+            <id property="property_id" column="propertyValue_property_id"/>
+        </association>
+        <association property="propertyValue_product" javaType="com.fang.entity.Product">
+            <id property="product_id" column="propertyValue_product_id"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="propertyValue">
+        INSERT propertyValue(propertyValue_id,propertyValue_value,propertyValue_property_id,propertyValue_product_id)
+            VALUES (
+            null,
+            #{propertyValue.propertyValue_value},
+        #{propertyValue.propertyValue_property.property_id},
+        #{propertyValue.propertyValue_product.product_id})
+    </insert>
+    <insert id="insertList" parameterType="list">
+        INSERT propertyValue(propertyValue_id,propertyValue_value,propertyValue_property_id,propertyValue_product_id)
+        VALUES
+        <foreach collection="propertyValue_list" index="index" item="propertyValue" separator=",">
+            (null,
+            #{propertyValue.propertyValue_value},
+            #{propertyValue.propertyValue_property.property_id},
+            #{propertyValue.propertyValue_product.product_id})
+        </foreach>
+    </insert>
+    <update id="updateOne" parameterType="propertyValue">
+        UPDATE propertyValue
+        <set>
+            <if test="propertyValue.propertyValue_value != null">propertyValue_value = #{propertyValue.propertyValue_value}</if>
+        </set>
+        <where>
+            propertyValue_id = #{propertyValue.propertyValue_id}
+        </where>
+    </update>
+    <delete id="deleteList" parameterType="java.util.ArrayList">
+        DELETE FROM propertyValue
+        <where>
+            propertyValue_id IN
+            <foreach collection="propertyValue_id_list" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
+    <select id="select" resultMap="propertyValueMap">
+        SELECT propertyValue_id,propertyValue_value,propertyValue_property_id,propertyValue_product_id FROM propertyValue
+        <if test="propertyValue != null">
+            <where>
+                <if test="propertyValue.propertyValue_value">propertyValue_value = #{propertyValue.propertyValue_value}</if>
+                <if test="propertyValue.propertyValue_property != null">
+                    <if test="propertyValue.propertyValue_property.property_id">propertyValue_property_id = #{propertyValue.propertyValue_property.property_id}</if>
+                </if>
+                <if test="propertyValue.propertyValue_product != null">
+                    <if test="propertyValue.propertyValue_product.product_id">propertyValue_product_id = #{propertyValue.propertyValue_product.product_id}</if>
+                </if>
+            </where>
+        </if>
+    </select>
+    <select id="selectOne" resultMap="propertyValueMap" parameterType="int">
+        SELECT propertyValue_id,propertyValue_value,propertyValue_property_id,propertyValue_product_id FROM propertyValue
+        <where>
+            propertyValue_id = #{propertyValue_id}
+        </where>
+    </select>
+    <select id="selectTotal" resultType="int" parameterType="propertyValue">
+        SELECT COUNT(propertyValue_id) FROM propertyValue
+        <if test="propertyValue != null">
+            <where>
+                <if test="propertyValue.propertyValue_value">propertyValue_value = #{propertyValue.propertyValue_value}</if>
+                <if test="propertyValue.propertyValue_property != null">
+                    <if test="propertyValue.propertyValue_property.property_id">propertyValue_property_id = #{propertyValue.propertyValue_property.property_id}</if>
+                </if>
+                <if test="propertyValue.propertyValue_product != null">
+                    <if test="propertyValue.propertyValue_product.product_id">propertyValue_product_id = #{propertyValue.propertyValue_product.product_id}</if>
+                </if>
+            </where>
+        </if>
+    </select>
+</mapper>

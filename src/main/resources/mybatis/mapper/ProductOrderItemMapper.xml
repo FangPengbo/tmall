@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "mybatis-3-mapper.dtd">
+<mapper namespace="com.fang.dao.ProductOrderItemMapper">
+    <resultMap id="productOrderItemMap" type="productOrderItem">
+        <id property="productOrderItem_id" column="productOrderItem_id"/>
+        <result property="productOrderItem_number" column="productOrderItem_number"/>
+        <result property="productOrderItem_price" column="productOrderItem_price"/>
+        <result property="productOrderItem_userMessage" column="productOrderItem_userMessage"/>
+        <association property="productOrderItem_product" javaType="com.fang.entity.Product">
+            <id property="product_id" column="productOrderItem_product_id"/>
+        </association>
+        <association property="productOrderItem_order" javaType="com.fang.entity.ProductOrder">
+            <id property="productOrder_id" column="productOrderItem_order_id"/>
+        </association>
+        <association property="productOrderItem_user" javaType="com.fang.entity.User">
+            <id property="user_id" column="productOrderItem_user_id"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="productOrderItem">
+        INSERT productOrderItem
+        (productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage)
+        VALUES (
+        null,
+        #{productOrderItem.productOrderItem_number},
+        #{productOrderItem.productOrderItem_price},
+        #{productOrderItem.productOrderItem_product.product_id},
+        #{productOrderItem.productOrderItem_order.productOrder_id},
+        #{productOrderItem.productOrderItem_user.user_id},
+        #{productOrderItem.productOrderItem_userMessage})
+    </insert>
+    <update id="updateOne" parameterType="productOrderItem">
+        UPDATE productOrderItem
+        <set>
+            <if test="productOrderItem.productOrderItem_order != null">
+                productOrderItem_order_id = #{productOrderItem.productOrderItem_order.productOrder_id},
+            </if>
+            <if test="productOrderItem.productOrderItem_number != null">
+                productOrderItem_number = #{productOrderItem.productOrderItem_number},
+            </if>
+            <if test="productOrderItem.productOrderItem_price != null">
+                productOrderItem_price = #{productOrderItem.productOrderItem_price},
+            </if>
+            <if test="productOrderItem.productOrderItem_userMessage != null">
+                productOrderItem_userMessage = #{productOrderItem.productOrderItem_userMessage}
+            </if>
+        </set>
+        <where>
+            productOrderItem_id = #{productOrderItem.productOrderItem_id}
+        </where>
+    </update>
+    <delete id="deleteList" parameterType="java.util.ArrayList">
+        DELETE FROM productOrderItem
+        <where>
+            productOrderItem_id IN
+            <foreach collection="productOrderItem_id_list" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </where>
+    </delete>
+    <select id="select" parameterType="com.fang.util.PageUtil" resultMap="productOrderItemMap">
+        SELECT
+        productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage
+        FROM productOrderItem
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.index},#{pageUtil.count}
+        </if>
+    </select>
+    <select id="selectByOrderId" resultMap="productOrderItemMap">
+        SELECT
+        productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage
+        FROM productOrderItem
+        <where>
+            productOrderItem_order_id = #{order_id}
+        </where>
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.index},#{pageUtil.count}
+        </if>
+    </select>
+    <select id="selectByUserId" resultMap="productOrderItemMap">
+        SELECT
+        productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage
+        FROM productOrderItem
+        <where>
+            productOrderItem_user_id = #{user_id} and productOrderItem_order_id is null
+        </where>
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.index},#{pageUtil.count} AND productOrderItem_order_id is null
+        </if>
+    </select>
+    <select id="selectByProductId" resultMap="productOrderItemMap">
+        SELECT
+        productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage
+        FROM productOrderItem
+        <where>
+            productOrderItem_product_id = #{product_id}
+        </where>
+        <if test="pageUtil != null">
+            LIMIT #{pageUtil.index},#{pageUtil.count}
+        </if>
+    </select>
+    <select id="selectOne" resultMap="productOrderItemMap" parameterType="int">
+        SELECT
+        productOrderItem_id,productOrderItem_number,productOrderItem_price,productOrderItem_product_id,productOrderItem_order_id,productOrderItem_user_id,productOrderItem_userMessage
+        FROM productOrderItem
+        <where>
+            productOrderItem_id = #{productOrderItem_id}
+        </where>
+    </select>
+    <select id="selectTotal" resultType="int">
+        SELECT COUNT(productOrderItem_id) FROM productOrderItem
+    </select>
+    <select id="selectTotalByOrderId" resultType="int" parameterType="int">
+        SELECT COUNT(productOrderItem_id) FROM productOrderItem
+        <where>
+            productOrderItem_order_id = #{order_id}
+        </where>
+    </select>
+    <select id="selectTotalByUserId" resultType="int" parameterType="int">
+        SELECT COUNT(productOrderItem_id) FROM productOrderItem
+        <where>
+            productOrderItem_user_id = #{user_id} AND productOrderItem_order_id is null
+        </where>
+    </select>
+    <select id="selectTotalByProductId" resultType="int" parameterType="int">
+        SELECT COUNT(productOrderItem_id) FROM productOrderItem
+        <where>
+            productOrderItem_product_id = #{product_id}
+        </where>
+    </select>
+    <!--获取商品的销量-->
+    <select id="selectSaleCount" resultType="int" parameterType="int">
+        SELECT SUM(productOrderItem_number) FROM productOrderItem WHERE productOrderItem_product_id = #{product_id}
+    </select>
+
+    <select id="getTotalByProductId" resultType="orderGroup">
+        SELECT
+        productOrder.productOrder_pay_date as productOrder_pay_date,count(productOrder.productOrder_id) as productOrder_count,productOrder.productOrder_status from productOrderItem,productOrder
+        <where>
+            productOrderItem.productOrder_pay_date BETWEEN #{beginDate} AND #{endDate}
+            <if test="product_id != null">
+                AND productOrder.productOrder_id = #{product_id}
+           </if>
+        </where>
+        GROUP BY productOrder.productOrder_pay_date,productOrder.productOrder_status
+    </select>
+</mapper>
