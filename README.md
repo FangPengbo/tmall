@@ -1,6 +1,6 @@
 # 迷你天猫商城
 + **问题交流群：763819871**原作者交流群欢迎加入
-+ **前台演示地址（服务器2核2G内存，请温和测试 ^ ^）：<http://www.fangpengbo:8080/tmall/>**
++ **前台演示地址（服务器2核2G内存，请温和测试 ^ ^）：<http://www.fangpengbo.com:8080/tmall/>**
 
 ### 该项目属于搬运
 该项目原地址:https://gitee.com/project_team/Tmall_demo ,现已更换为springboot微服务,原项目还有后台管理系统<br>
