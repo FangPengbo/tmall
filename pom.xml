@@ -174,7 +174,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>3.2.18.RELEASE</version>
+      <version>5.2.20.RELEASE</version>
     </dependency>
 
     <!-- log4j2 -->
